@@ -9,6 +9,9 @@
   const bodyParser = require("body-parser");
   const favicon = require("serve-favicon");
   const path = require("path");
+  const cfenv = require("cfenv");
+  const appEnv = cfenv.getAppEnv();
+
   const port = process.env.PORT || 3000;
 
   const app = express();
@@ -22,8 +25,8 @@
 
   require("./server/routes/index")(app);
 
-  app.listen(port, '0.0.0.0', function() {
-    console.log("server starting on port " + port);
+  app.listen(appEnv.port, '0.0.0.0', function() {
+    console.log("server starting on port " + appEnv.url);
   });
   
 }());

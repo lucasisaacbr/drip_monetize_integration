@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "cfenv": "^1.0.4",
     "dotenv": "^4.0.0",
     "drip-nodejs": "^0.2.0",
     "express": "^4.16.2",

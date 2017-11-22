@@ -13,7 +13,7 @@
       let codigoProduto = data["produto[codigo]"] || 0;
       let nome = data["comprador[nome]"].split(" ")[0] || " ";
 
-      if (!api.validateKeys(data.chave_unica, data["produto[chave]"])) {
+      if (api.validateKeys(data.chave_unica, data["produto[chave]"])) {
 
         if(statusVenda !== 'Aguardando pagamento' && statusVenda !== 'Cancelada' && statusVenda !== 'Finalizada'){
           api.carrinhoAbandonado(data).then(function (response) {
