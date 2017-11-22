@@ -2,4 +2,3 @@ node_modules
 .env
 server/config
 .idea/
-.idea/*.xml
