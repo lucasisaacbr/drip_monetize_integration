@@ -12,7 +12,7 @@
         return false;
       }
 
-      return chaveProduto === monetizeConfig.productKey;
+      return (chaveProduto === monetizeConfig.productKey || chaveProduto === monetizeConfig.sosKey);
     },
     "aguardandoPagamentoBoleto": function (data) {
       return new Promise(function (resolve, reject) {
@@ -21,10 +21,16 @@
           return reject("Data object is empty");
         }
 
-        let flwUp_id = dripConfig.dripFollowUpID;
         let usrEmail = data["comprador[email]"] || "";
         let urlBoleto = data["venda[linkBoleto]"] || 0;
         let nome = data["comprador[nome]"].split(" ")[0] || " ";
+        let flwUp_id = "";
+
+        if(data["produto[chave]"] === monetizeConfig.productKey){
+          flwUp_id = dripConfig.dripFollowUpID;
+        } else {
+          flwUp_id = dripConfig.boletoSOS;
+        }
 
 
           getDrip.startOnAWorkflow(usrEmail, flwUp_id, {
@@ -43,7 +49,14 @@
     },
     "carrinhoAbandonado": function(data) {
 
-      let abandoned_id = process.env.DRIPABANDONEDID;
+      let abandoned_id = "";
+
+      if(data["produto[chave]"] === monetizeConfig.productKey){
+        abandoned_id = dripConfig.dripAbandonedID;
+      } else {
+        abandoned_id = dripConfig.abandonoSOS;
+      }
+
       let usrEmail = data["comprador[email]"] || "";
       let nome = data["comprador[nome]"].split(" ")[0] || " ";
 
@@ -64,7 +77,14 @@
     "vendaCancelada": function (data) {
       return new Promise(function (resolve, reject) {
 
-        let abandoned_id = process.env.DRIPABANDONEDID;
+        let abandoned_id = "";
+
+        if(data["produto[chave]"] === monetizeConfig.productKey){
+          abandoned_id = dripConfig.dripAbandonedID;
+        } else {
+          abandoned_id = dripConfig.abandonoSOS;
+        }
+
         let usrEmail = data["comprador[email]"] || "";
 
         getDrip.startOnAWorkflow(usrEmail, abandoned_id, {}, function (err, res, body) {
@@ -78,7 +98,14 @@
     "vendaFinalizada": function (data) {
       return new Promise(function (resolve, reject) {
 
-        let vsc_id = process.env.DRIPVSCID;
+        let vsc_id = "";
+
+        if(data["produto[chave]"] === monetizeConfig.productKey){
+          vsc_id = dripConfig.dripVscID;
+        } else {
+          vsc_id = dripConfig.compraSOS;
+        }
+
         let usrEmail = data["comprador[email]"] || "";
 
         getDrip.startOnAWorkflow(usrEmail, vsc_id, {}, function (err, res, body) {
@@ -103,6 +130,10 @@
           return resolve(body);
         });
       }) 
+    },
+    
+    "searchQuery": function (res) {
+      
     }
 
   }

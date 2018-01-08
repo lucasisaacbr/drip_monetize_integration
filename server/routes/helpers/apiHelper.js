@@ -15,7 +15,7 @@
 
       if (api.validateKeys(data.chave_unica, data["produto[chave]"])) {
 
-        if(statusVenda !== 'Aguardando pagamento' && statusVenda !== 'Cancelada' && statusVenda !== 'Finalizada'){
+        if(statusVenda !== "Aguardando pagamento" && statusVenda !== "Cancelada" && statusVenda !== "Finalizada"){
           api.carrinhoAbandonado(data).then(function (response) {
             res.status(200).send(response);
           }).catch(function (err) {
@@ -24,7 +24,7 @@
           });
         }
 
-        if (statusVenda === 'Aguardando pagamento' && formaPag === 'Boleto' && codigoProduto === '39806') {
+        else if (statusVenda === "Aguardando pagamento" && formaPag === "Boleto" && (codigoProduto === "39806" || codigoProduto === "46164")) {
           api.aguardandoPagamentoBoleto(data).then(function (response) {
             res.status(200).send(response);
           }).catch(function (err) {
@@ -33,7 +33,7 @@
           });
         }
 
-        else if (statusVenda === 'Cancelada' && codigoProduto === '39806') {
+        else if (statusVenda === "Cancelada" && (codigoProduto === "39806" || codigoProduto === "46164")) {
           api.vendaCancelada(data).then(function (response) {
             res.status(200).send(response);
           }).catch(function (err) {
@@ -42,7 +42,7 @@
           });
         }
 
-        else if (statusVenda === 'Finalizada' && codigoProduto === '39806') {
+        else if (statusVenda === "Finalizada" && (codigoProduto === "39806" || codigoProduto === "46164")) {
           api.removerWorkflow(data).then(function (response) {
             api.vendaFinalizada(data).then(function (finalRes) {
               res.status(200).send(finalRes);
@@ -52,14 +52,17 @@
           }).catch(function (err) {
             res.status(500).send(err);
           })
-        } else {
-          res.status(404).send("Algo errado verique as validações");
         }
 
       } else {
         res.status(403).send("Chave Invalida");
       }
     });
+
+    app.post("/analytics", function (req, res) {
+
+    });
+
   }
 
 }());
